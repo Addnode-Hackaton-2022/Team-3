@@ -12,7 +12,7 @@ Det inte kan skickar in i gyroflow är gimbal-kompensationen.
 
 Add-Type -Path C:\Projects\Hackathon\Team-3\newtonsoft\lib\netstandard2.0\Newtonsoft.Json.dll;
 Add-Type -Path C:\Projects\Hackathon\Team-3\mavlink\lib\net461\MAVLink.dll;
-
+$ErrorActionPreference = "Stop";
 $parser = [MAVLink+MavlinkParse]::new();
 
 $FTPServer = "10.150.2.141";
