@@ -10,6 +10,17 @@ Det inte kan skickar in i gyroflow är gimbal-kompensationen.
 
 #>
 
+function Quaternion-ToYawPitchRoll([System.Numerics.Quaternion]$q) {
+    $yaw = [Math]::Atan2([float]2.0 * ($q.Y * $q.W + $q.X * $q.Z), [float]1.0 - [float]2.0 * ($q.X * $q.X + $q.Y * $q.Y));
+    $pitch = [Math]::Asin([float]2.0 * ($q.X * $q.W - $q.Y * $q.Z));
+    $roll = [Math]::Atan2([float]2.0 * ($q.X * $qY + $qZ * $qW), [float]1.0 - [float]2.0 * ($q.X * $q.X + $q.Z * $q.Z));
+    return @{
+        "roll" = $roll;
+        "pitch" = $pitch;
+        "yaw" = $yaw;
+    };
+}
+
 Add-Type -Path C:\Projects\Hackathon\Team-3\newtonsoft\lib\netstandard2.0\Newtonsoft.Json.dll;
 Add-Type -Path C:\Projects\Hackathon\Team-3\mavlink\lib\net461\MAVLink.dll;
 $ErrorActionPreference = "Stop";
@@ -32,12 +43,44 @@ for($i = 0;$i -lt 1000;$i++) {
     #    [MAVLink+mavlink_position_target_global_int_t]$planeRotation = $mavlinkMessage.data;
     #    $planeRotation;
     #}
-    if($mavlinkMessage.msgtypename -eq "RAW_IMU") {
+    if($mavlinkMessage.msgtypename -eq "ATTITUDE") {
         #$mavlinkMessage.ToString(); # Gyro (x/y/z) ???
-        echo "RAW IMU";
-        [MAVLink+mavlink_raw_imu_t]$planeImu = $mavlinkMessage.data;
-        $planeImu;
+
+        <#
+            Från servot får vi PITCH och YAW
+            Mocka detta data: Yaw = 0.5rad, pitch = -0.25rad        
+        #>
+        $gimbalYaw = 0;
+        $gimbalPitch = -[Math]::Round([Math]::PI/4, 2);
+
+        # Data från planet (attitude)
+        [MAVLink+mavlink_attitude_t]$attitude = $mavlinkMessage.data;
+        $planeYaw = [Math]::Round($attitude.yaw, 2);
+        $planePitch = $([Math]::Round($attitude.pitch, 2));
+        $planeRoll = $([Math]::Round($attitude.roll, 2));
+
+        Write-Host "Plane:`t`tyaw: $planeYaw,`tpitch: $planePitch, roll: $planeRoll" -ForegroundColor Green;
+        Write-Host "Gimbal`t`tyaw: $gimbalYaw, Gimbalpitch: $gimbalPitch" -ForegroundColor Green;
+
+        $gimbalQuaternion = [System.Numerics.Quaternion]::CreateFromYawPitchRoll($gimbalYaw, $gimbalPitch, 0);
+        $planeQuaternion = [System.Numerics.Quaternion]::CreateFromYawPitchRoll($planeYaw, $planePitch, $planeRoll);
+
+        # Kombinera dessa två Quaternions
+        [System.Numerics.Quaternion]$combinedQuaternion = [System.Numerics.Quaternion]::Multiply($planeQuaternion, $gimbalQuaternion);
+        Write-Host "Resultquaternion: X: $([Math]::Round($combinedQuaternion.X, 2)), Y: $([Math]::Round($combinedQuaternion.Y, 2)), Z: $([Math]::Round($combinedQuaternion.Z, 2)), W: $([Math]::Round($combinedQuaternion.W, 2))" -ForegroundColor Cyan;
+
+        # Ta fram slutgiltig roll/pitch/yaw
+        $result = Quaternion-ToYawPitchRoll $combinedQuaternion;
+
+        $resultYaw = $([Math]::Round($result.yaw, 2));
+        $resultPitch = $([Math]::Round($result.pitch, 2));
+        $resultRoll = $([Math]::Round($result.roll, 2));
+
+        Write-Host "Resultyaw: $resultYaw, Resultpitch: $resultPitch, Resultroll: $resultRoll" -ForegroundColor Yellow;
+
     }
+
+    <#
     if($mavlinkMessage.msgtypename -eq "SCALED_IMU2") {
         #$mavlinkMessage.ToString(); # Gyro (x/y/z) ???
         echo "SCALED IMU2";
@@ -45,4 +88,5 @@ for($i = 0;$i -lt 1000;$i++) {
         $scaledImu2;
     }
     echo "=====";
+    #>
 }
