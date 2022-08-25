@@ -50,6 +50,8 @@ Här skall sista commiten till repot vara gjord och den muntliga presentationen 
 # Inskick, deadline dag två kl 12:30
 
 ### Övergripande beskrivning och val av utmaning
+  - Strömmad video med korrekt telemetrilog. Det gick ut på att lägga till vinklarna på gimbalen för kameran i
+    utströmmen (utströmmarna) för att nästa team ska kunna använda den infromationen för att stabilisera videoströmmen.
 
 ### Team Antimon
 
@@ -59,7 +61,7 @@ Här skall sista commiten till repot vara gjord och den muntliga presentationen 
 * Mattias Lanzén (Symetri AB)
 * Markus Meder (Decerno AB)
 * Daniel Svennberg (Ida Infront AB)
-* Toomas Vaks (Technia AB)
+* Toomas Vaks (TECHNIA AB)
 * Charlotte Viktorsson (S-Group Solutions AB)
 
 #### Hur har ni jobbat inom teamet? Har alla gjort samma eller har ni haft olika roller?
@@ -67,16 +69,23 @@ Här skall sista commiten till repot vara gjord och den muntliga presentationen 
 Vi har planerat tillsammans och sedan med olika uppgifter två och två eller tre och tre.
 
 ### Teknik. Beskrivningen på eran teknikstack, språk och APIer ni har använt.
-<beskrivning.>
+powershell rpanion mavlink-router quaternion-bibliotek (för att räkna ut vinklar)
+Vi har diskuterad huruvida vi ska lägga till data om vinklarna i RTSP strömmen eller om vi ska ha en
+separat ström med extra-informationen. Just nu lutar det åt två strömmar.
 
 ### Lösning, dessa frågor ska minst besvaras
  * Hur har ni löst utmaningen?
+ ** Vi har inte kommit fram till en lösning. Men vi har idéer som vi har presenterat ovan.
+    Vi skulle kunna skippa rpanion och bara använda oss av mavlink-router.
  * Hur långt har ni kommit?
+ ** Vi experimenterar med att få ut två strömmar enligt beskrivning ovan.
  * Vad är nästa steg?
+ ** Fortsätta experimentet.
  * Några rekommendationer för framtiden?
+ ** Vi vet ännu inte vilken väg som är bäst. Rpanion kanske inte behövs utan det räcker med mavlink.
+    Hurvida vi kan baka in informationen i rtspstömmen eller skicka den som en separat ström återstår att reda ut.
  * Några insikter, begränsningar eller utmaningar ni stött på som är intressanta att dela med der av?
-
-<beskrivning.>
+ ** Rpanion skickar data en gång i sekunden vilket förmodligen är för sällan. En egen lösning med mavlink borde kunns skicka oftare.
 
 
 # Mall för muntlig presentation, deadline dag två kl 12:30
