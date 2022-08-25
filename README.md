@@ -50,17 +50,21 @@ Här skall sista commiten till repot vara gjord och den muntliga presentationen 
 # Inskick, deadline dag två kl 12:30
 
 ### Övergripande beskrivning och val av utmaning
-<beskrivning här>
 
-### Team
+### Team Antimon
 
 #### Namn på medlemmar 
-* <namn.>
-* <namn.>
-* <osv...>
+* Gabriel Aunan (Decisive AS)
+* Emil Goude (Sokigo AB)
+* Mattias Lanzén (Symetri AB)
+* Markus Meder (Decerno AB)
+* Daniel Svennberg (Ida Infront AB)
+* Toomas Vaks (Technia AB)
+* Charlotte Viktorsson (S-Group Solutions AB)
 
 #### Hur har ni jobbat inom teamet? Har alla gjort samma eller har ni haft olika roller?
-<beskrivning.>
+
+Vi har planerat tillsammans och sedan med olika uppgifter två och två eller tre och tre.
 
 ### Teknik. Beskrivningen på eran teknikstack, språk och APIer ni har använt.
 <beskrivning.>
